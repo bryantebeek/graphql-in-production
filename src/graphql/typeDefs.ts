@@ -11,7 +11,7 @@ export const typeDefs = gql`
     type Person {
         id: Int
         name: String
-        friends: [Person]
+        friends(limit: Int, offset: Int): [Person]
     }
 
     type Query {

@@ -9,6 +9,7 @@ import { typeDefs } from '../typeDefs'
 import { Person } from '../../database/models/Person'
 import { Sequelize } from 'sequelize-typescript'
 import { sequelize } from '../../database/sequelize'
+import { take } from 'lodash'
 
 // Case 5: Protecting GraphQL Queries
 const resolvers = {
@@ -27,13 +28,6 @@ const resolvers = {
 
             return people.map(person => person.id).flat()
         },
-
-        // Step 6: Timeouts
-        // takes5sec: async () => {
-        //     return new Promise(resolve => {
-        //         setTimeout(() => resolve(true), 5000)
-        //     })
-        // },
     },
     Person: {
         id: async (personId: number) => {
@@ -43,7 +37,11 @@ const resolvers = {
             const { name } = await context.loaders.persons.load(personId)
             return name
         },
-        friends: async (personId: number, _, context) => {
+        friends: async (personId: number, { limit = 10, offset = 0 }, context) => {
+            // Step 5: Enforcing pagination
+            // const ids = await context.loaders.friendIdsForPerson.load(personId)
+            // return ids.slice(offset, offset + Math.min(limit, 10))
+
             return await context.loaders.friendIdsForPerson.load(personId)
         },
     },
@@ -84,24 +82,17 @@ const apollo = new ApolloServer({
     // },
 })
 
-// Step 6: Timeouts
-// app.use('*', (req, res, next) => {
-//     setTimeout(() => {
-//         next(new Error('Timeout'))
-//     }, 1000)
-// })
+// Step 6: Rate limiting
+app.use(
+    // can use redis, memcached, mongo, etc.
+    // default is in-memory
+    rateLimit({
+        windowMs: 5 * 1000, // 5 seconds
+        max: 2, // max 2 request
+    })
+)
 
-// Step 7: Rate limiting
-// app.use(
-//     // can use redis, memcached, mongo, etc.
-//     // default is in-memory
-//     rateLimit({
-//         windowMs: 5 * 1000, // 5 seconds
-//         max: 2, // max 2 request
-//     })
-// )
-
-// Step 8 (extra): Helmet
+// Step 7 (extra): Helmet
 // https://helmetjs.github.io/
 app.use(helmet())
 
