@@ -6,3 +6,7 @@ services:
             - 5432:5432
         environment:
             - POSTGRES_PASSWORD=secret
+    redis:
+        image: redis:latest
+        ports:
+            - 6379:6379

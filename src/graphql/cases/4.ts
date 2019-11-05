@@ -1,9 +1,10 @@
 import { ApolloServer } from 'apollo-server'
+import { RedisCache } from 'apollo-server-cache-redis'
 import { context } from '../context'
 import { typeDefs } from '../typeDefs'
 import { Person } from '../../database/models/Person'
 
-// Case 4: Exposing sensitive information through Graph traversal
+// Case 4: Persisted Queries
 const resolvers = {
     Query: {
         person: async (_, { id }) => {
@@ -32,4 +33,8 @@ export const case4 = new ApolloServer({
     typeDefs,
     resolvers,
     context,
+    persistedQueries: {
+        cache: new RedisCache(),
+    },
+    cacheControl: { defaultMaxAge: 5 },
 })

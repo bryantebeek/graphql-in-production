@@ -4,6 +4,7 @@ import { case2 } from './graphql/cases/2'
 import { case3 } from './graphql/cases/3'
 import { case5 } from './graphql/cases/5'
 import { ApolloServer } from 'apollo-server'
+import { nonExecutableDefinitionMessage } from 'graphql/validation/rules/ExecutableDefinitions'
 
 export const run = async () => {
     // showQueryLogs()
@@ -11,7 +12,8 @@ export const run = async () => {
     // case1.listen()
     // case2.listen()
     // case3.listen()
-    case5.listen()
+
+    case5.listen(4000)
 
     await benchmark(
         [

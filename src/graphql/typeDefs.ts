@@ -17,5 +17,6 @@ export const typeDefs = gql`
     type Query {
         person(id: Int!): Person
         people(limit: Int, offset: Int): [Person]
+        takes5sec: Boolean
     }
 `
