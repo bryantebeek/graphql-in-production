@@ -2,27 +2,34 @@ import { showQueryLogs, resetQueryIndex, getQueryIndex } from './database/sequel
 import { case1 } from './graphql/cases/1'
 import { case2 } from './graphql/cases/2'
 import { case3 } from './graphql/cases/3'
+import { case4 } from './graphql/cases/4'
 import { case5 } from './graphql/cases/5'
+import { case6 } from './graphql/cases/6'
 import { ApolloServer } from 'apollo-server'
 import { nonExecutableDefinitionMessage } from 'graphql/validation/rules/ExecutableDefinitions'
 
 export const run = async () => {
-    // showQueryLogs()
+    showQueryLogs()
 
-    // case1.listen()
+    // Demo 1-3
+    case1.listen()
     // case2.listen()
     // case3.listen()
 
-    case5.listen(4000)
+    // Demo 4: Persisted queries
+    // case4.listen()
+
+    // Demo 5: Security
+    // case5.listen(4000)
+
+    // Demo 6: Graph Traversal
+    // case6.listen(4000)
 
     await benchmark(
         [
-            // Simple finds using Sequelize
-            case1,
-            // Using dataloaders with Query / Relation dataloading
-            case2,
-            // Using dataloaders with Field dataloading
-            case3,
+            // case1,
+            // case2,
+            // case3,
         ],
         `
             query {
@@ -48,6 +55,7 @@ const benchmark = async (cases: ApolloServer[], query: string) => {
             query,
         })
 
-        console.log(`Case ${parseInt(index, 10) + 1} has done ${getQueryIndex()} queries`)
+        // - 1 to account for the loggedin user query
+        console.log(`Case ${parseInt(index, 10) + 1} has done ${getQueryIndex() - 1} queries`)
     }
 }

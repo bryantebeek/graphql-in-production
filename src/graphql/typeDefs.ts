@@ -4,7 +4,7 @@ export const typeDefs = gql`
     type User {
         id: Int
         username: String
-        email: String
+        bsn: String
         person: Person
     }
 
@@ -12,11 +12,12 @@ export const typeDefs = gql`
         id: Int
         name: String
         friends(limit: Int, offset: Int): [Person]
+        user: User
     }
 
     type Query {
+        authenticatedUser: User
         person(id: Int!): Person
         people(limit: Int, offset: Int): [Person]
-        takes5sec: Boolean
     }
 `

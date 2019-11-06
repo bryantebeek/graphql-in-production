@@ -1,4 +1,4 @@
-import { BelongsToMany, Column, Model, Table, ForeignKey } from 'sequelize-typescript'
+import { BelongsToMany, Column, Model, Table, ForeignKey, HasOne } from 'sequelize-typescript'
 import { BelongsToManyAddAssociationMixin, BelongsToManyGetAssociationsMixin } from 'sequelize/types'
 import { Friendship } from './Friendship'
 import { User } from './User'
@@ -14,9 +14,8 @@ export class Person extends Model<Person> {
     @BelongsToMany(() => Person, () => Friendship, 'personId', 'friendId')
     friends: Person[]
 
-    @ForeignKey(() => User)
-    @Column
-    userId: number
+    @HasOne(() => User)
+    user: User
 
     addFriend: BelongsToManyAddAssociationMixin<Person, number>
     getFriends: BelongsToManyGetAssociationsMixin<Person>

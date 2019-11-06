@@ -3,6 +3,7 @@ import { Person } from '../../database/models/Person'
 import { context } from '../context'
 import { typeDefs } from '../typeDefs'
 
+// Case 1: N+1 problem
 const resolvers = {
     Query: {
         person: async (_, { id }) => {

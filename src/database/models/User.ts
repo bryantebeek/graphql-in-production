@@ -1,6 +1,6 @@
-import { Column, HasOne, Model, Table } from 'sequelize-typescript'
+import { BelongsTo, Column, Model, Table, ForeignKey } from 'sequelize-typescript'
+import { HasOneGetAssociationMixin, HasOneSetAssociationMixin } from 'sequelize/types'
 import { Person } from './Person'
-import { HasOneSetAssociationMixin, HasOneGetAssociationMixin } from 'sequelize/types'
 
 @Table
 export class User extends Model<User> {
@@ -8,10 +8,14 @@ export class User extends Model<User> {
     username: string
 
     @Column
-    password: string
+    bsn: string
 
-    @HasOne(() => Person)
+    @BelongsTo(() => Person)
     person: Person
+
+    @ForeignKey(() => Person)
+    @Column
+    personId: number
 
     setPerson: HasOneSetAssociationMixin<Person, number>
     getPerson: HasOneGetAssociationMixin<Person>

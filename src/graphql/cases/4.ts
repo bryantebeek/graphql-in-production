@@ -23,8 +23,8 @@ const resolvers = {
             const { name } = await context.loaders.persons.load(personId)
             return name
         },
-        friends: async (personId: number, _, context) => {
-            return await context.loaders.friendIdsForPerson.load(personId)
+        friends: (personId: number, _, context) => {
+            return context.loaders.friendIdsForPerson.load(personId)
         },
     },
 }

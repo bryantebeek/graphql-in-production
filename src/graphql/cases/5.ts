@@ -83,18 +83,18 @@ const apollo = new ApolloServer({
 })
 
 // Step 6: Rate limiting
-app.use(
-    // can use redis, memcached, mongo, etc.
-    // default is in-memory
-    rateLimit({
-        windowMs: 5 * 1000, // 5 seconds
-        max: 2, // max 2 request
-    })
-)
+// app.use(
+// // can use redis, memcached, mongo, etc.
+// // default is in-memory
+// rateLimit({
+//     windowMs: 5 * 1000, // 5 seconds
+//     max: 2, // max 2 request
+// })
+// )
 
 // Step 7 (extra): Helmet
 // https://helmetjs.github.io/
-app.use(helmet())
+// app.use(helmet())
 
 apollo.applyMiddleware({ app })
 

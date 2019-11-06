@@ -14,15 +14,17 @@ export function createAssociationDataLoader<T extends Model<any, any>>(
     association: string
 ): DataLoader<number, T> {
     return new DataLoader(async (ids: number[]) => {
-        const persons = await model.findAll({
+        const models = await model.findAll({
             where: { id: ids },
             include: [{ association }],
         })
 
         return ids.map(id => {
-            const person = persons.find(p => p.id.toString() === id.toString())
+            const model = models.find(p => p.id.toString() === id.toString())
 
-            return person[association].map(f => f.id)
+            if (!model[association]) return null
+
+            return Array.isArray(model[association]) ? model[association].map(m => m.id) : model[association].id
         })
     })
 }

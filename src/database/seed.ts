@@ -1,4 +1,5 @@
 import { Person } from './models/Person'
+import { User } from './models/User'
 
 export const seed = async () => {
     const bryan = new Person({ name: 'Bryan' })
@@ -17,4 +18,12 @@ export const seed = async () => {
     await peter.addFriend(bryan)
     await bryan.addFriend(leon)
     await leon.addFriend(peter)
+
+    const userBryan = new User({ username: 'bryantebeek', bsn: 'bryan-bsn' })
+    await userBryan.save()
+    await userBryan.setPerson(bryan)
+
+    const userPeter = new User({ username: 'peterpeerdeman', bsn: 'peter-bsn' })
+    await userPeter.save()
+    await userPeter.setPerson(peter)
 }
