@@ -6,6 +6,9 @@ import { typeDefs } from '../typeDefs'
 const resolvers = {
     Query: {
         person: async (_, { id }) => {
+            // Case 2: DataLoaders (old)
+            // return context.loaders.persons.load(id)
+
             return id
         },
     },

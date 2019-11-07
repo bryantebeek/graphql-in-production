@@ -18,10 +18,10 @@ const resolvers = {
             return id
         },
         people: async (_, { limit = 2, offset = 0 }) => {
-            const people = await Person.findAll()
+            // const people = await Person.findAll()
 
             // Step 4: Masking errors
-            // const people = await sequelize.query<Person>('select * from Person', { model: Person })
+            const people = await sequelize.query<Person>('SELECT * FROM Person', { model: Person })
 
             // Step 5: Enforcing pagination
             // const people = await Person.findAll({ limit: Math.min(limit, 3), offset })
@@ -39,10 +39,10 @@ const resolvers = {
         },
         friends: async (personId: number, { limit = 10, offset = 0 }, context) => {
             // Step 5: Enforcing pagination
-            // const ids = await context.loaders.friendIdsForPerson.load(personId)
-            // return ids.slice(offset, offset + Math.min(limit, 10))
+            const ids = await context.loaders.friendIdsForPerson.load(personId)
+            return ids.slice(offset, offset + Math.min(limit, 10))
 
-            return await context.loaders.friendIdsForPerson.load(personId)
+            // return context.loaders.friendIdsForPerson.load(personId)
         },
     },
 }
@@ -54,43 +54,47 @@ const apollo = new ApolloServer({
     resolvers,
     context,
     validationRules: [
-        // depthLimit(3), // Step 1: Query depth protection
-        // createComplexityLimitRule(20), // Step 2: Query complexity protection
+        // Step 1: Query depth protection
+        // depthLimit(3),
+        // Step 2: Query complexity protection
+        // Object = 10, field = 1
+        // createComplexityLimitRule(20),
     ],
     // introspection: false, // Step 3: Disabling the introspection query
 
     // Step 4: Masking errors in production
     // debug: false,
-    // formatError: error => {
-    //     // e.g. log to Sentry
-    //     console.log(error)
+    formatError: error => {
+        // e.g. log to Sentry
+        console.log(error)
 
-    //     const isProduction = () => true // process.env.NODE_ENV === 'production'
+        const isProduction = () => true // process.env.NODE_ENV === 'production'
 
-    //     if (isProduction()) {
-    //         // This is blacklisting
-    //         if (error.extensions.exception.name === 'SequelizeDatabaseError') {
-    //             return new Error('Something went wrong!')
-    //         }
+        if (isProduction()) {
+            // This is blacklisting
+            if (error.extensions.exception.name === 'SequelizeDatabaseError') {
+                return new Error('Something went wrong!')
+            }
 
-    //         // This is whitelisting
-    //         if (error.extensions.exception.name === 'InputValidationError') {
-    //             return error
-    //         }
-    //         return new Error('Something went wrong!')
-    //     }
-    // },
+            // This is whitelisting
+            if (error.extensions.exception.name === 'InputValidationError') {
+                return error
+            }
+
+            return new Error('Something went wrong!')
+        }
+    },
 })
 
 // Step 6: Rate limiting
-// app.use(
-// // can use redis, memcached, mongo, etc.
-// // default is in-memory
-// rateLimit({
-//     windowMs: 5 * 1000, // 5 seconds
-//     max: 2, // max 2 request
-// })
-// )
+app.use(
+    // can use redis, memcached, mongo, etc.
+    // default is in-memory
+    rateLimit({
+        windowMs: 5 * 1000, // 5 seconds
+        max: 2, // max 2 request
+    })
+)
 
 // Step 7 (extra): Helmet
 // https://helmetjs.github.io/

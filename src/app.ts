@@ -12,39 +12,18 @@ export const run = async () => {
     showQueryLogs()
 
     // Demo 1-3
-    case1.listen()
-    // case2.listen()
-    // case3.listen()
+    case1.listen(4001)
+    case2.listen(4002)
+    case3.listen(4003)
 
     // Demo 4: Persisted queries
-    // case4.listen()
+    case4.listen(4004)
 
     // Demo 5: Security
-    // case5.listen(4000)
+    case5.listen(4005)
 
     // Demo 6: Graph Traversal
-    // case6.listen(4000)
-
-    await benchmark(
-        [
-            // case1,
-            // case2,
-            // case3,
-        ],
-        `
-            query {
-                person(id: 1) {
-                    friends {
-                        friends {
-                            friends {
-                                id
-                            }
-                        }
-                    }
-                }
-            }
-        `
-    )
+    case6.listen(4006)
 }
 
 const benchmark = async (cases: ApolloServer[], query: string) => {
